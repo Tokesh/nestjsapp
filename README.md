@@ -8,6 +8,7 @@ Error handling
 
 Database integration (which running from docker) PostreSQL + TypeORM
 
+---------------
 
 Before start:
 
