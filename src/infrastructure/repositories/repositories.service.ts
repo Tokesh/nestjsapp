@@ -1,0 +1,1 @@
+//adding service like for pagination, query managers and etc

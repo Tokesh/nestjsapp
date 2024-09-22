@@ -4,6 +4,5 @@ export class UserM {
   email: string;
   phone: string;
   password: string;
-  avatar: string;
   created: Date;
 }

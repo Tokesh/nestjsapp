@@ -9,8 +9,6 @@ enum Environment {
 }
 
 class EnvVariables {
-  @IsEnum(Environment)
-  NODE_ENV: Environment;
 
   @IsNotEmpty()
   @IsString()

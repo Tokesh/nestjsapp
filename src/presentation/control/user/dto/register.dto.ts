@@ -1,6 +1,6 @@
 
 import { Transform } from 'class-transformer';
-import { IsNotEmpty } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, Length } from 'class-validator';
 
 
 export default class RegisterDto {

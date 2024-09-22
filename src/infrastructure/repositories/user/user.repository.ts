@@ -17,12 +17,18 @@ export class UserRepoOrm implements IUserRepo {
 
     return this.toModel(entity);
   }
+
+  async delete(id: number) {
+    const result = await this.repo.delete(id);
+
+    return result;
+  }
+
   async getById(id: number): Promise<UserM | null> {
     const entity = await this.repo.findOne({
       where: {
         id,
       },
-      relations: ['permissions', 'partner'],
     });
     return entity ? this.toModel(entity) : null;
   }
@@ -33,7 +39,6 @@ export class UserRepoOrm implements IUserRepo {
       where: {
         email,
       },
-      relations: ['permissions', 'partner'],
     });
 
     return entity ? this.toModel(entity) : null;
@@ -44,7 +49,6 @@ export class UserRepoOrm implements IUserRepo {
       where: {
         phone,
       },
-      relations: ['permissions', 'partner'],
     });
     return entity ? this.toModel(entity) : null;
   }

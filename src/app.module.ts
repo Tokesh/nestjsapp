@@ -1,17 +1,18 @@
 import { Module } from '@nestjs/common';
-import { UsecaseProxyModule } from './infrastructure/usecase-proxy/usecase-proxy.module';
-import { JwtStrategy } from './infrastructure/common/strategies/jwt.strategy';
-import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { EnvConfigModule } from './infrastructure/config/env-config/env-config.module';
-import { EnvConfigService } from './infrastructure/config/env-config/env-config.service';
-import { JwtServiceModule } from './infrastructure/services/jwt/jwt.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
-import { ResponseInterceptor } from './infrastructure/common/interceptors/response.interceptor';
+import { UsecaseProxyModule } from 'src/infrastructure/usecase-proxy/usecase-proxy.module';
+import { EnvConfigModule } from 'src/infrastructure/config/env/env.module';
+import { EnvConfigService } from 'src/infrastructure/config/env/env.service';
+import { JwtServiceModule } from 'src/infrastructure/services/jwt/jwt.module';
+import { ResponseInterceptor } from 'src/infrastructure/common/interceptors/response.interceptor';
+import { UserControlController } from 'src/presentation/control/user/user.controller';
+import { UserControlModule } from 'src/presentation/control/user/user-control.module';
+import { UserController } from 'src/presentation/default/user/user.controller';
+import { UserModule } from 'src/presentation/default/user/user.module';
 @Module({
   imports: [
     UsecaseProxyModule.register(),
-    PassportModule,
     EnvConfigModule,
     JwtModule.registerAsync({
       imports: [EnvConfigModule],
@@ -27,10 +28,14 @@ import { ResponseInterceptor } from './infrastructure/common/interceptors/respon
     }),
     
     JwtServiceModule,
+    /* CONTROL */
+    UserControlModule,
+
+    /* DEFAULT */
+    UserModule,
 
   ],
   providers: [
-    JwtStrategy,
     {
       provide: APP_INTERCEPTOR,
       useClass: ResponseInterceptor,

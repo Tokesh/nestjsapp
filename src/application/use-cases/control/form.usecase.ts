@@ -1,9 +1,11 @@
 import { BadRequestException } from '@nestjs/common';
 import { IBcryptService } from 'src/domain/adapters/bcrypt.interface';
+import { UserM } from 'src/domain/model/user/user';
 import { IUserRepo } from 'src/domain/repositories/account/user/user.interface';
 import { ERR } from 'src/infrastructure/common/filter/err-codes.const';
+import RegisterDto from 'src/presentation/control/user/dto/register.dto';
 
-export class RegisterUseCases {
+export class FormUserUseCases {
   constructor(
     private readonly userRepo: IUserRepo,
     private readonly bcryptService: IBcryptService,
@@ -15,27 +17,20 @@ export class RegisterUseCases {
     const isPhoneExists = await this.userRepo.getByPhone(obj.payload.phone);
     if (isPhoneExists) throw new BadRequestException(ERR.USER.PHONE_EXISTS);
 
-    const generatedPassword = `${Math.floor(Math.random() * (99999999 - 10000000) + 10000000)}`;
-
-    const model = await this.toCreateUserModel(obj.payload, generatedPassword);
-    await this.userRepo.create(model);
+    const model = await this.toCreateUserModel(obj.payload);
+    await this.userRepo.save(model);
 
   }
 
   private async toCreateUserModel(
-    payload: RegisterDto,
-    password: string,
-  ): Promise<CreatePartnerM> {
-    const model: CreatePartnerM = new CreatePartnerM();
-    model.users = [
-      {
-        name: payload.name,
-        email: payload.email,
-        phone: payload.phone,
-        password: await this.bcryptService.hash(password),
-      },
-    ];
+    payload: RegisterDto
+  ): Promise<UserM | null> {
+    const user: UserM = new UserM();
 
-    return model;
+    user.name = payload.name;
+    user.password = await this.bcryptService.hash(payload.password),
+    user.phone = payload.phone;
+    user.email = payload.email;
+    return user;
   }
 }
